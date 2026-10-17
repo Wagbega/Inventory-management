@@ -1,0 +1,471 @@
+{
+  "entities": {
+    "InventoryItem": {
+      "title": "InventoryItem",
+      "description": "An inventory product item that can be managed locally or loaded remotely via mobile/Android.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier of the item"
+        },
+        "sku": {
+          "type": "string",
+          "description": "Stock keeping unit code"
+        },
+        "name": {
+          "type": "string",
+          "description": "Product display name"
+        },
+        "category": {
+          "type": "string",
+          "description": "Product category"
+        },
+        "stock": {
+          "type": "number",
+          "description": "Current on-hand quantity"
+        },
+        "minStock": {
+          "type": "number",
+          "description": "Threshold for low stock warnings"
+        },
+        "costPrice": {
+          "type": "number",
+          "description": "Ex Brew acquisition cost"
+        },
+        "retailPrice": {
+          "type": "number",
+          "description": "Whole Sale selling price"
+        },
+        "hasPromo": {
+          "type": "boolean",
+          "description": "Whether item has an active or scheduled promotional price"
+        },
+        "promoPrice": {
+          "type": "number",
+          "description": "Promotional selling price during promo week or month"
+        },
+        "promoStartDate": {
+          "type": "string",
+          "description": "Promo start date (YYYY-MM-DD)"
+        },
+        "promoEndDate": {
+          "type": "string",
+          "description": "Promo end date (YYYY-MM-DD)"
+        },
+        "unit": {
+          "type": "string",
+          "description": "Measurement unit (pcs, kg, box, etc)"
+        },
+        "location": {
+          "type": "string",
+          "description": "Warehouse rack or store aisle location"
+        },
+        "barcode": {
+          "type": "string",
+          "description": "Physical barcode string"
+        },
+        "supplierId": {
+          "type": "string",
+          "description": "Supplier ID if linked"
+        },
+        "notes": {
+          "type": "string",
+          "description": "Internal notes or remarks"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "ISO timestamp of last update"
+        }
+      },
+      "required": [
+        "id",
+        "sku",
+        "name",
+        "category",
+        "stock",
+        "costPrice",
+        "retailPrice"
+      ]
+    },
+    "StockMovement": {
+      "title": "StockMovement",
+      "description": "Stock transaction audit record for receipts, sales, adjustments, or inbound dispatches.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique movement ID"
+        },
+        "itemId": {
+          "type": "string",
+          "description": "Associated product ID"
+        },
+        "type": {
+          "type": "string",
+          "description": "Movement type (inbound, outbound, adjustment)"
+        },
+        "quantity": {
+          "type": "number",
+          "description": "Quantity moved"
+        },
+        "reason": {
+          "type": "string",
+          "description": "Reason for stock movement"
+        },
+        "date": {
+          "type": "string",
+          "description": "Timestamp of movement"
+        },
+        "operator": {
+          "type": "string",
+          "description": "User or operator who performed the movement"
+        },
+        "reference": {
+          "type": "string",
+          "description": "Order or receipt reference"
+        }
+      },
+      "required": [
+        "id",
+        "itemId",
+        "type",
+        "quantity",
+        "date"
+      ]
+    },
+    "DailyExpense": {
+      "title": "DailyExpense",
+      "description": "Daily operational expense deduction from sales (electricity, vehicle fuel, vehicle repair, miscellaneous, home expenses, salary).",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique expense record ID"
+        },
+        "date": {
+          "type": "string",
+          "description": "Date of expense in YYYY-MM-DD"
+        },
+        "category": {
+          "type": "string",
+          "description": "Expense category (electricity, vehicle_fuel, vehicle_repair, miscellaneous, home_expenses, salary, other)"
+        },
+        "amount": {
+          "type": "number",
+          "description": "Expense amount"
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of expense"
+        },
+        "paymentSource": {
+          "type": "string",
+          "description": "Payment source (Cash Sales, Bank Transfer, POS Terminal)"
+        },
+        "vehicleNumber": {
+          "type": "string",
+          "description": "Vehicle number/plate if vehicle repair"
+        },
+        "driverName": {
+          "type": "string",
+          "description": "Driver name if vehicle repair"
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp of creation"
+        }
+      },
+      "required": [
+        "id",
+        "date",
+        "category",
+        "amount",
+        "description"
+      ]
+    },
+    "BankDeposit": {
+      "title": "BankDeposit",
+      "description": "Daily bank deposit record for sales reconciliation.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique deposit record ID"
+        },
+        "date": {
+          "type": "string",
+          "description": "Date of deposit in YYYY-MM-DD"
+        },
+        "amount": {
+          "type": "number",
+          "description": "Amount deposited"
+        },
+        "depositMethod": {
+          "type": "string",
+          "description": "Method of deposit (cash or transfer)"
+        },
+        "bankName": {
+          "type": "string",
+          "description": "Name of destination bank"
+        },
+        "depositorName": {
+          "type": "string",
+          "description": "Name of the person who made the deposit"
+        },
+        "referenceNumber": {
+          "type": "string",
+          "description": "Teller or transaction reference"
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp of creation"
+        }
+      },
+      "required": [
+        "id",
+        "date",
+        "amount",
+        "depositMethod",
+        "bankName",
+        "depositorName"
+      ]
+    },
+    "SalesRepDispatch": {
+      "title": "SalesRepDispatch",
+      "description": "Outward stock dispatch to field sales rep, including products taken, total sum, and unsold returns minus calculation.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique dispatch ID"
+        },
+        "dispatchNumber": {
+          "type": "string",
+          "description": "Sequential dispatch voucher number"
+        },
+        "repName": {
+          "type": "string",
+          "description": "Name of sales representative"
+        },
+        "dateDispatched": {
+          "type": "string",
+          "description": "Dispatch date YYYY-MM-DD"
+        },
+        "totalSumTaken": {
+          "type": "number",
+          "description": "Total monetary sum of products taken"
+        },
+        "totalUnsoldReturnedValue": {
+          "type": "number",
+          "description": "Monetary value of products returned unsold"
+        },
+        "netSalesDue": {
+          "type": "number",
+          "description": "Total sum minus unsold returned value"
+        },
+        "status": {
+          "type": "string",
+          "description": "active or reconciled"
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Creation timestamp"
+        }
+      },
+      "required": [
+        "id",
+        "dispatchNumber",
+        "repName",
+        "dateDispatched",
+        "totalSumTaken",
+        "status"
+      ]
+    },
+    "AppUser": {
+      "title": "AppUser",
+      "description": "Administrator and supervisor staff account profile synced across branch locations.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "role": { "type": "string" },
+        "location": { "type": "string" },
+        "phone": { "type": "string" },
+        "pin": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "status": { "type": "string" }
+      },
+      "required": ["id", "name", "email", "role", "status"]
+    },
+    "SupervisorPresence": {
+      "title": "SupervisorPresence",
+      "description": "Real-time presence tracking of logged-in supervisors and administrators across locations.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "userName": { "type": "string" },
+        "role": { "type": "string" },
+        "location": { "type": "string" },
+        "lastSeen": { "type": "string" },
+        "activeTab": { "type": "string" },
+        "deviceInfo": { "type": "string" }
+      },
+      "required": ["id", "userId", "userName", "role", "location", "lastSeen"]
+    },
+    "ActivityEvent": {
+      "title": "ActivityEvent",
+      "description": "Real-time unified activity feed events emitted for sales, dispatches, reconciliations, and expenses.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "timestamp": { "type": "string" },
+        "type": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "amount": { "type": "number" },
+        "operator": { "type": "string" },
+        "location": { "type": "string" },
+        "status": { "type": "string" }
+      },
+      "required": ["id", "timestamp", "type", "title", "operator"]
+    },
+    "DevSecurityConfig": {
+      "title": "DevSecurityConfig",
+      "description": "Cloud-stored developer password hash and security configuration protecting the Dev settings panel.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Document identifier (dev_security)"
+        },
+        "passwordHash": {
+          "type": "string",
+          "description": "SHA-256 hex digest of the Dev password"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "ISO timestamp of last password update"
+        },
+        "updatedBy": {
+          "type": "string",
+          "description": "Name or email of the operator who updated the password"
+        }
+      },
+      "required": ["id", "passwordHash", "updatedAt"]
+    },
+    "ActiveDeviceSession": {
+      "title": "ActiveDeviceSession",
+      "description": "Tracks each logged-in device session, heartbeat timestamp, operator identity, platform, and app version in Firestore.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique persistent device identifier (e.g. DEV-8F3A92)"
+        },
+        "deviceName": {
+          "type": "string",
+          "description": "Friendly label or workstation name for the device"
+        },
+        "platform": {
+          "type": "string",
+          "description": "Runtime platform (Windows Electron, Mobile / Android, Web Browser)"
+        },
+        "osInfo": {
+          "type": "string",
+          "description": "Operating system and browser/runtime details"
+        },
+        "userId": {
+          "type": "string",
+          "description": "Currently signed-in user ID on this device"
+        },
+        "userName": {
+          "type": "string",
+          "description": "Currently signed-in user display name"
+        },
+        "userRole": {
+          "type": "string",
+          "description": "Role of the signed-in user (admin, supervisor, sales_manager)"
+        },
+        "userEmail": {
+          "type": "string",
+          "description": "Email of the signed-in user"
+        },
+        "location": {
+          "type": "string",
+          "description": "Branch or warehouse location"
+        },
+        "appVersion": {
+          "type": "string",
+          "description": "Application build version running on the device"
+        },
+        "status": {
+          "type": "string",
+          "description": "Session state: online, offline, or revoked"
+        },
+        "loginTime": {
+          "type": "string",
+          "description": "ISO timestamp when session signed in"
+        },
+        "lastActive": {
+          "type": "string",
+          "description": "ISO timestamp of most recent heartbeat"
+        }
+      },
+      "required": [
+        "id",
+        "deviceName",
+        "platform",
+        "userId",
+        "userName",
+        "userRole",
+        "status",
+        "lastActive"
+      ]
+    }
+  },
+  "firestore": {
+    "/items/{itemId}": {
+      "schema": "InventoryItem",
+      "description": "Inventory catalog collection synced across desktop and remote Android clients."
+    },
+    "/stock_movements/{movementId}": {
+      "schema": "StockMovement",
+      "description": "Audit trail log of all inventory changes and intakes."
+    },
+    "/expenses/{expenseId}": {
+      "schema": "DailyExpense",
+      "description": "Daily operational expense records."
+    },
+    "/bank_deposits/{depositId}": {
+      "schema": "BankDeposit",
+      "description": "Daily bank deposit records."
+    },
+    "/sales_rep_dispatches/{dispatchId}": {
+      "schema": "SalesRepDispatch",
+      "description": "Field sales rep dispatch and return reconciliation records."
+    },
+    "/users/{userId}": {
+      "schema": "AppUser",
+      "description": "Admin and supervisor accounts synchronized across all branch devices in real time."
+    },
+    "/supervisor_presences/{presenceId}": {
+      "schema": "SupervisorPresence",
+      "description": "Live heartbeats and active supervisor locations monitoring registry."
+    },
+    "/activity_events/{eventId}": {
+      "schema": "ActivityEvent",
+      "description": "Real-time operational activity stream for supervisor monitoring."
+    },
+    "/app_config/{configId}": {
+      "schema": "DevSecurityConfig",
+      "description": "Cloud-stored Dev security password configuration."
+    },
+    "/active_devices/{deviceId}": {
+      "schema": "ActiveDeviceSession",
+      "description": "Real-time registry of logged-in devices and heartbeats monitored inside the Dev panel."
+    }
+  }
+}

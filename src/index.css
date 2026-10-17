@@ -1,0 +1,113 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer base {
+  :root {
+    --win-accent: #0067c0;
+    --win-accent-hover: #1975c5;
+    --win-accent-active: #005a9e;
+  }
+
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, 'Plus Jakarta Sans', sans-serif;
+  }
+}
+
+/* Custom Windows 11 slim scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(120, 120, 120, 0.25);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(120, 120, 120, 0.45);
+}
+
+/* Windows Fluent Acrylic blur effect */
+.fluent-acrylic {
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+}
+
+.fluent-mica {
+  backdrop-filter: blur(30px) saturate(150%);
+  -webkit-backdrop-filter: blur(30px) saturate(150%);
+}
+
+/* Print stylesheets for barcode labels, thermal receipts & invoices */
+@media print {
+  html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+    overflow: visible !important;
+    height: auto !important;
+  }
+  
+  body * {
+    visibility: hidden;
+  }
+
+  .printable-area, .printable-area *,
+  .printable-receipt, .printable-receipt *,
+  #printable-receipt-container, #printable-receipt-container * {
+    visibility: visible !important;
+  }
+
+  .printable-area {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    margin: 0;
+    padding: 10mm;
+    background: white !important;
+    color: black !important;
+  }
+
+  .printable-receipt,
+  #printable-receipt-container {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100% !important;
+    max-width: 80mm !important;
+    margin: 0 auto !important;
+    padding: 2mm 3mm !important;
+    background: white !important;
+    color: black !important;
+    font-size: 11px !important;
+    box-shadow: none !important;
+    border: none !important;
+  }
+
+  .printable-receipt.receipt-format-a4,
+  #printable-receipt-container.receipt-format-a4 {
+    max-width: 100% !important;
+    padding: 8mm !important;
+    font-size: 12px !important;
+  }
+
+  .no-print,
+  .no-print * {
+    display: none !important;
+    visibility: hidden !important;
+  }
+
+  @page {
+    margin: 2mm;
+    size: auto;
+  }
+}
+

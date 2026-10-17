@@ -1,0 +1,7 @@
+{
+  "name": "Inventory Management",
+  "description": "Windows Fluent desktop-styled inventory management system with live stock tracking, POS register slips, daily sales recap, operational expense ledger, bank deposit reconciliation, field sales rep dispatches, and real-time Firestore sync.",
+  "requestFramePermissions": ["camera"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+
