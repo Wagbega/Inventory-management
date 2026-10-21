@@ -1,0 +1,153 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer base {
+  :root {
+    --win-accent: #0067c0;
+    --win-accent-hover: #1975c5;
+    --win-accent-active: #005a9e;
+  }
+
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, 'Plus Jakarta Sans', sans-serif;
+  }
+}
+
+/* Custom Windows 11 slim scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(120, 120, 120, 0.25);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(120, 120, 120, 0.45);
+}
+
+/* Windows Fluent Acrylic blur effect */
+.fluent-acrylic {
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+}
+
+.fluent-mica {
+  backdrop-filter: blur(30px) saturate(150%);
+  -webkit-backdrop-filter: blur(30px) saturate(150%);
+}
+
+/* Print stylesheets for barcode labels, thermal receipts, gate passes & invoices */
+@media print {
+  @page {
+    margin: 4mm 2mm;
+    size: auto;
+  }
+
+  html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+    overflow: visible !important;
+    height: auto !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* When printing from modal, neutralize fixed modal positioning and overflow clipping */
+  [data-print-modal="true"],
+  div[data-print-modal="true"] {
+    position: static !important;
+    inset: auto !important;
+    width: 100% !important;
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+    background: #ffffff !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+  }
+
+  [data-print-modal="true"] > div {
+    max-height: none !important;
+    height: auto !important;
+    overflow: visible !important;
+    border: none !important;
+    box-shadow: none !important;
+    background: #ffffff !important;
+  }
+
+  [data-print-modal="true"] .overflow-y-auto {
+    overflow: visible !important;
+    height: auto !important;
+    max-height: none !important;
+    background: #ffffff !important;
+    padding: 0 !important;
+  }
+
+  .no-print,
+  .no-print * {
+    display: none !important;
+    visibility: hidden !important;
+  }
+
+  /* Printable containers take the full page area cleanly */
+  .printable-area,
+  .printable-receipt,
+  #printable-receipt-container,
+  #printable-dispatch-slip,
+  .printable-dispatch-slip {
+    display: block !important;
+    visibility: visible !important;
+    position: static !important;
+    width: 100% !important;
+    margin: 0 auto !important;
+    padding: 4mm !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+    box-shadow: none !important;
+    border: none !important;
+    overflow: visible !important;
+  }
+
+  /* Thermal roll formatting */
+  .printable-receipt:not(.receipt-format-a4),
+  #printable-receipt-container:not(.receipt-format-a4),
+  .printable-dispatch-slip.format-thermal80,
+  #printable-dispatch-slip.format-thermal80 {
+    max-width: 76mm !important;
+    padding: 2mm 1mm !important;
+    font-size: 11px !important;
+  }
+
+  /* A4 document formatting */
+  .receipt-format-a4,
+  #printable-receipt-container.receipt-format-a4,
+  .format-a4,
+  #printable-dispatch-slip.format-a4 {
+    max-width: 100% !important;
+    padding: 6mm !important;
+    font-size: 12px !important;
+  }
+
+  .printable-area *,
+  .printable-receipt *,
+  #printable-receipt-container *,
+  #printable-dispatch-slip *,
+  .printable-dispatch-slip * {
+    visibility: visible !important;
+    color: #000000 !important;
+  }
+}
+

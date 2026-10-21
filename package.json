@@ -1,0 +1,116 @@
+{
+  "name": "inventory-management",
+  "private": true,
+  "version": "1.2.13",
+  "description": "Inventory Management & POS System",
+  "author": "Softcraft-Technologies",
+  "type": "module",
+  "main": "electron/main.cjs",
+  "scripts": {
+    "dev": "vite --port=3000 --host=0.0.0.0",
+    "build": "vite build",
+    "build:electron": "vite build && electron-builder",
+    "electron:build": "vite build && electron-builder",
+    "electron:pack": "vite build && electron-builder --dir",
+    "preview": "vite preview",
+    "clean": "rm -rf dist server.js dist-electron",
+    "lint": "tsc --noEmit",
+    "build:win": "vite build && electron-builder --win",
+    "stage:hosting": "node electron/prepare-hosting.cjs",
+    "deploy:hosting": "npx firebase-tools deploy --only hosting --project gen-lang-client-0500999619",
+    "publish:firebase": "vite build && electron-builder --win && node electron/prepare-hosting.cjs && npx firebase-tools deploy --only hosting --project gen-lang-client-0500999619",
+    "publish:github": "vite build && electron-builder --win --publish always",
+    "release:github": "vite build && electron-builder --win --publish always",
+    "publish:win": "vite build && electron-builder --win --publish always",
+    "publish:draft": "vite build && electron-builder --win --publish onTagOrDraft"
+  },
+  "build": {
+    "appId": "com.inventory.management",
+    "productName": "Inventory Management",
+    "electronVersion": "33.2.0",
+    "icon": "electron/icons/icon.png",
+    "files": [
+      "dist/**/*",
+      "electron/**/*",
+      "build/**/*",
+      "package.json"
+    ],
+    "directories": {
+      "output": "dist-electron"
+    },
+    "publish": {
+      "provider": "github",
+      "owner": "Wagbega",
+      "repo": "inventory-management",
+      "private": false
+    },
+    "win": {
+      "icon": "electron/icons/icon.ico",
+      "artifactName": "${productName}-Setup-${version}.${ext}",
+      "target": [
+        "nsis",
+        "portable"
+      ]
+    },
+    "nsis": {
+      "artifactName": "${productName}-Setup-${version}.${ext}",
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "installerIcon": "electron/icons/icon.ico",
+      "uninstallerIcon": "electron/icons/icon.ico",
+      "installerHeaderIcon": "electron/icons/icon.ico",
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    },
+    "appx": {
+      "identityName": "InventoryManagement",
+      "backgroundColor": "#2563eb",
+      "publisher": "Softcraft-Technologies"
+    },
+    "mac": {
+      "icon": "electron/icons/icon.png",
+      "category": "public.app-category.business",
+      "target": [
+        "dmg",
+        "zip"
+      ]
+    },
+    "linux": {
+      "icon": "electron/icons",
+      "category": "Office",
+      "target": [
+        "AppImage",
+        "deb"
+      ]
+    }
+  },
+  "dependencies": {
+    "@google/genai": "^2.4.0",
+    "@tailwindcss/vite": "^4.1.14",
+    "@vitejs/plugin-react": "^5.0.4",
+    "dotenv": "^17.2.3",
+    "electron-updater": "^6.8.9",
+    "express": "^4.21.2",
+    "firebase": "^12.18.0",
+    "lucide-react": "^0.546.0",
+    "motion": "^12.23.24",
+    "qrcode": "^1.5.4",
+    "react": "^19.0.1",
+    "react-dom": "^19.0.1",
+    "vite": "^6.2.3"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^22.14.0",
+    "@types/qrcode": "^1.5.6",
+    "autoprefixer": "^10.4.21",
+    "electron": "^34.0.0",
+    "electron-builder": "^26.15.3",
+    "esbuild": "^0.25.0",
+    "firebase-tools": "^14.0.0",
+    "tailwindcss": "^4.1.14",
+    "tsx": "^4.21.0",
+    "typescript": "~5.8.2",
+    "vite": "^6.2.3"
+  }
+}

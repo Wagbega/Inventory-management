@@ -1,0 +1,157 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default-deny catch-all for any unmapped paths
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function isValidItemData(data) {
+      return data.name is string && data.name.size() > 0 && data.name.size() <= 250 &&
+             data.sku is string && data.sku.size() > 0 && data.sku.size() <= 100 &&
+             data.quantity is number && data.quantity >= 0 &&
+             data.unitCost is number && data.unitCost >= 0 &&
+             data.retailPrice is number && data.retailPrice >= 0 &&
+             (!('hasPromo' in data) || data.hasPromo is bool) &&
+             (!('promoPrice' in data) || (data.promoPrice is number && data.promoPrice >= 0)) &&
+             (!('promoStartDate' in data) || (data.promoStartDate is string && data.promoStartDate.size() <= 30)) &&
+             (!('promoEndDate' in data) || (data.promoEndDate is string && data.promoEndDate.size() <= 30));
+    }
+
+    function isValidExpenseData(data) {
+      return data.date is string && data.date.size() > 0 &&
+             data.category is string && data.category.size() > 0 &&
+             data.amount is number && data.amount >= 0 &&
+             data.description is string;
+    }
+
+    function isValidDepositData(data) {
+      return data.date is string && data.date.size() > 0 &&
+             data.amount is number && data.amount >= 0 &&
+             data.depositMethod is string &&
+             data.bankName is string &&
+             data.depositorName is string;
+    }
+
+    function isValidDispatchData(data) {
+      return data.repName is string && data.repName.size() > 0 &&
+             data.dispatchNumber is string && data.dispatchNumber.size() > 0 &&
+             data.totalSumTaken is number && data.totalSumTaken >= 0 &&
+             data.status is string;
+    }
+
+    // Items Collection - Synced across desktop POS and remote Android apps
+    match /items/{itemId} {
+      allow read: if true;
+      allow create: if isValidId(itemId) && isValidItemData(request.resource.data);
+      allow update: if isValidId(itemId) && isValidItemData(request.resource.data);
+      allow delete: if isValidId(itemId);
+    }
+
+    // Stock Movements Collection - Audit ledger log
+    match /stock_movements/{movementId} {
+      allow read: if true;
+      allow create: if isValidId(movementId) &&
+                       request.resource.data.itemId is string &&
+                       request.resource.data.quantityDelta is number;
+      allow update: if false; // Audit logs are immutable
+      allow delete: if isValidId(movementId);
+    }
+
+    // Daily Expenses - Deductions from daily sales
+    match /expenses/{expenseId} {
+      allow read: if true;
+      allow create: if isValidId(expenseId) && isValidExpenseData(request.resource.data);
+      allow update: if isValidId(expenseId) && isValidExpenseData(request.resource.data);
+      allow delete: if isValidId(expenseId);
+    }
+
+    // Daily Bank Deposits - Sales banking audit
+    match /bank_deposits/{depositId} {
+      allow read: if true;
+      allow create: if isValidId(depositId) && isValidDepositData(request.resource.data);
+      allow update: if isValidId(depositId) && isValidDepositData(request.resource.data);
+      allow delete: if isValidId(depositId);
+    }
+
+    // Field Sales Rep Dispatches & Return Reconciliations
+    match /sales_rep_dispatches/{dispatchId} {
+      allow read: if true;
+      allow create: if isValidId(dispatchId) && isValidDispatchData(request.resource.data);
+      allow update: if isValidId(dispatchId) && isValidDispatchData(request.resource.data);
+      allow delete: if isValidId(dispatchId);
+    }
+
+    // Staff Users & Accounts (Admin, Supervisors, Sales)
+    function isValidUserData(data) {
+      return data.name is string && data.name.size() > 0 && data.name.size() <= 100 &&
+             data.email is string && data.email.size() > 0 &&
+             data.role is string &&
+             data.status is string;
+    }
+
+    match /users/{userId} {
+      allow read: if true;
+      allow create: if isValidId(userId) && isValidUserData(request.resource.data);
+      allow update: if isValidId(userId) && isValidUserData(request.resource.data);
+      allow delete: if isValidId(userId);
+    }
+
+    // Active Supervisor Presences across different locations
+    match /supervisor_presences/{presenceId} {
+      allow read: if true;
+      allow write: if isValidId(presenceId);
+    }
+
+    // Real-Time Activity Events Stream
+    match /activity_events/{eventId} {
+      allow read: if true;
+      allow create: if isValidId(eventId);
+      allow update: if false;
+      allow delete: if isValidId(eventId);
+    }
+
+    // Cloud Dev Security Configuration
+    function isValidDevSecurityConfig(data) {
+      return data.id is string && data.id.size() > 0 && data.id.size() <= 100 &&
+             data.passwordHash is string && data.passwordHash.size() == 64 &&
+             data.updatedAt is string && data.updatedAt.size() > 0 && data.updatedAt.size() <= 100;
+    }
+
+    match /app_config/{configId} {
+      allow read: if true;
+      allow create: if isValidId(configId) && isValidDevSecurityConfig(request.resource.data);
+      allow update: if isValidId(configId) && isValidDevSecurityConfig(request.resource.data);
+      allow delete: if false;
+    }
+
+    // Active Device Sessions & Heartbeat Tracking (Dev Panel Monitor)
+    function isValidDeviceSession(data) {
+      return data.id is string && data.id.size() > 0 && data.id.size() <= 100 &&
+             data.deviceName is string && data.deviceName.size() > 0 && data.deviceName.size() <= 150 &&
+             data.platform is string && data.platform.size() > 0 && data.platform.size() <= 100 &&
+             data.userId is string && data.userId.size() <= 100 &&
+             data.userName is string && data.userName.size() <= 100 &&
+             data.userRole is string && data.userRole.size() <= 50 &&
+             data.status in ['online', 'offline', 'revoked'] &&
+             data.lastActive is string && data.lastActive.size() > 0 && data.lastActive.size() <= 100;
+    }
+
+    match /active_devices/{deviceId} {
+      allow read: if true;
+      allow create: if isValidId(deviceId) && isValidDeviceSession(request.resource.data);
+      allow update: if isValidId(deviceId) && isValidDeviceSession(request.resource.data);
+      allow delete: if isValidId(deviceId);
+    }
+
+    // Connection testing endpoint
+    match /test/{docId} {
+      allow read: if true;
+      allow write: if false;
+    }
+  }
+}
